@@ -9,7 +9,6 @@ import Foundation
 
 /// bundle & tableName friendly extension
 public extension String {
-    
     /**
      Swift 2 friendly localization syntax, replaces NSLocalizedString.
      
@@ -24,11 +23,20 @@ public extension String {
     func localized(using tableName: String?, in bundle: Bundle?) -> String {
         let bundle: Bundle = bundle ?? .main
         if let path = bundle.path(forResource: Localize.currentLanguage(), ofType: "lproj"),
-            let bundle = Bundle(path: path) {
-            return bundle.localizedString(forKey: self, value: nil, table: tableName)
+           let bundle = Bundle(path: path)
+        {
+            let value = bundle.localizedString(forKey: self, value: nil, table: tableName)
+            if value.isEmpty,
+               let path = bundle.path(forResource: LCLBaseBundle, ofType: "lproj"),
+               let bundle = Bundle(path: path)
+            {
+                return bundle.localizedString(forKey: self, value: nil, table: tableName)
+            }
+            return value
         }
         else if let path = bundle.path(forResource: LCLBaseBundle, ofType: "lproj"),
-            let bundle = Bundle(path: path) {
+                let bundle = Bundle(path: path)
+        {
             return bundle.localizedString(forKey: self, value: nil, table: tableName)
         }
         return self
@@ -67,5 +75,4 @@ public extension String {
     func localizedPlural(argument: CVarArg, using tableName: String?, in bundle: Bundle?) -> String {
         return NSString.localizedStringWithFormat(localized(using: tableName, in: bundle) as NSString, argument) as String
     }
-    
 }
