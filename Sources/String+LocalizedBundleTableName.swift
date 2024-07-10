@@ -27,7 +27,7 @@ public extension String {
         {
             let value = _bundle.localizedString(forKey: self, value: nil, table: tableName)
             if value == self || value.isEmpty,
-               let _path = bundle.path(forResource: "en", ofType: "lproj"),
+               let _path = bundle.path(forResource: "en-US", ofType: "lproj"),
                let _bundle = Bundle(path: _path)
             {
                 return bundle.localizedString(forKey: self, value: nil, table: tableName)
